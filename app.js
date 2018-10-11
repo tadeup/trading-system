@@ -12,9 +12,9 @@ require('./models/Users');
 require('./config/passport');
 const {mongoose} = require('./db/mongoose');
 
-//Instantiate routers
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+//Configure process.env variables
+var isProduction = process.env.NODE_ENV === 'production';
+const port = process.env.PORT || 3000
 
 //Initiate our app
 const app = express();
@@ -26,18 +26,18 @@ app.set('view engine', 'hbs');
 //Configure our app
 app.use(cors());
 app.use(require('morgan')('dev'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({ secret: 'PLEASE-CHANGE-THIS-KEY', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));   // PLEASE MAKE SECRET MORE SECURE HERE
+app.use(session({ secret: 'PLEASE-CHANGE-THIS-KEY', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));   // PLEASE MAKE SECRET MORE SECURE HERE 2
 
 if(!isProduction) {
   app.use(errorHandler());
 }
 
-//Configure routs
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+//Configure routers
+// MUST BE SET AFTER BODY-PARSER
+app.use(require('./routes'));
 
 //Error handlers & middlewares
 if(!isProduction) {
@@ -64,4 +64,4 @@ app.use((err, req, res) => {
   });
 });
 
-app.listen(8000, () => console.log('Server running on http://localhost:8000/'));
+app.listen(port, () => console.log(`Server running on port ${port}/`));

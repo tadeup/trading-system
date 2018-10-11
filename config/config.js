@@ -1,8 +1,5 @@
 var env = process.env.NODE_ENV || 'development';
 
-//Configure isProduction variable
-const isProduction = process.env.NODE_ENV === 'production';
-
 console.log('************************************************************');
 console.log(`SECCESSFULLY LOGGED TO DATABASE @"${env}" ENVIROMENT`);
 console.log('************************************************************');

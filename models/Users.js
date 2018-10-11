@@ -1,11 +1,22 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const validator = require('validator');
 
 const { Schema } = mongoose;
 
 const UsersSchema = new Schema({
-  email: String,
+  email: {
+    type:String,
+    required: true,
+    trim: true,
+    minlength: 1,
+    unique: true,
+    validate: {
+      validator: validator.isEmail,
+      message: '{VALUE} is not a valid email'
+    }
+  },
   hash: String,
   salt: String,
 });
